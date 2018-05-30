@@ -11,17 +11,18 @@ import pygame.font, pygame.event, pygame.draw
 changed = False
 screen = None
 
-#Draw 30x30 image of input
-def ConvertImageToMatrix(image, screen):
-    A = image.ravel()
-    A = (255 - A * 255).transpose()
+
+def convert_image_to_matrix(image, screen):
+    # Draw 30x30 image of input
+    a = image.ravel()
+    a = (255 - a * 255).transpose()
     size = 30
     mat = range(900)
     mat = np.reshape(mat, (30, 30))
     for x in range(size):
         for y in range(size):
             z = x * 30 + y
-            c = int(A[z])
+            c = int(a[z])
             pygame.draw.rect(screen, (c, c, c), (x * 11 + 385, 15 + y * 11, 11, 11))
             if c == 255:
                 mat[x][y] = 0
@@ -30,43 +31,45 @@ def ConvertImageToMatrix(image, screen):
     #print(mat.transpose())
     return mat.transpose()
 
-#Draw 30x30 image of input
-def drawPixelated(image, screen):
-    A = image.ravel()
-    A = (255 - A * 255).transpose()
+
+def draw_pixelated(image, screen):
+    # Draw 30x30 image of input
+    a = image.ravel()
+    a = (255 - a * 255).transpose()
     size = 30
     for x in range(size):
         for y in range(size):
             z = x * 30 + y
-            c = int(A[z])
+            c = int(a[z])
             pygame.draw.rect(screen, (c, c, c), (x * 11 + 385, 15 + y * 11, 11, 11))
 
-#Crop and resize the input
-def calculateImage(background, screen, Theta1, Theta2, lineWidth):
+
+def calculate_image(background, screen, theta1, theta2, line_width):
+    # Crop and resize the input
     global changed
-    focusSurface = pygame.surfarray.array3d(background)
-    focus = abs(1 - focusSurface / 255)
+    focus_surface = pygame.surfarray.array3d(background)
+    focus = abs(1 - focus_surface / 255)
     focus = np.mean(focus, 2)
     x = []
-    xaxis = np.sum(focus, axis=1)
-    for i, v in enumerate(xaxis):
+    x_axis = np.sum(focus, axis=1)
+    for i, v in enumerate(x_axis):
         if v > 0:
             x.append(i)
             break
-    for i, v in enumerate(xaxis[::-1]):
+    for i, v in enumerate(x_axis[::-1]):
         if v > 0:
-            x.append(len(xaxis) - i)
+            x.append(len(x_axis) - i)
             break
 
     y = []
-    yaxis = np.sum(focus, axis=0)
-    for i, v in enumerate(yaxis):
+    y_axis = np.sum(focus, axis=0)
+    for i, v in enumerate(y_axis):
         if v > 0:
             y.append(i)
             break
-    for i, v in enumerate(yaxis[::-1]):
+    for i, v in enumerate(y_axis[::-1]):
         if v > 0:
-            y.append(len(yaxis) - i)
+            y.append(len(y_axis) - i)
             break
 
     try:
@@ -92,14 +95,14 @@ def calculateImage(background, screen, Theta1, Theta2, lineWidth):
         changed = True
         crop_surf = pygame.Surface((dx, dy))
         crop_surf.blit(background, (0, 0), (x[0], y[0], x[1], y[1]), special_flags=BLEND_RGBA_MAX)
-        scaledBackground = pygame.transform.smoothscale(crop_surf, (30, 30))
+        scaled_background = pygame.transform.smoothscale(crop_surf, (30, 30))
 
-        image = pygame.surfarray.array3d(scaledBackground)
+        image = pygame.surfarray.array3d(scaled_background)
         image = abs(1 - image / 253)
         image = np.mean(image, 2)
         image = np.matrix(image.ravel())
 
-        mat = ConvertImageToMatrix(image, screen)
+        mat = convert_image_to_matrix(image, screen)
 
         (x, y) = screen.get_size()
 
@@ -108,9 +111,9 @@ def calculateImage(background, screen, Theta1, Theta2, lineWidth):
 
     return mat
 
-#Get key event
-def get_key():
 
+def get_key():
+    # Get key event
     while 1:
         event = pygame.event.poll()
 
@@ -120,22 +123,22 @@ def get_key():
         else:
             pass
 
-#Print a message in a box on the screen
-def display_box(screen, message):
 
-    fontobject = pygame.font.Font(None, 120)
+def display_box(screen, message):
+    # Print a message in a box on the screen
+    font_object = pygame.font.Font(None, 120)
     pygame.draw.rect(screen, (0, 0, 0),
                      ((screen.get_width() / 2) - 100,
                       (screen.get_height()) - 170,
                       70, 90), 0)
     if len(message) != 0:
-        screen.blit(fontobject.render(message, 1, (255, 255, 255)),
+        screen.blit(font_object.render(message, 1, (255, 255, 255)),
                     ((screen.get_width() / 2) - 110, (screen.get_height()) - 168))
         pygame.display.flip()
 
-#create input box for entering correct value of y
-def ask(screen, question):
 
+def ask(screen, question):
+    # create input box for entering correct value of y
     pygame.font.init()
     current_string = str()
     display_box(screen, question + " " + current_string + "")
@@ -159,65 +162,62 @@ def ask(screen, question):
 
     return current_string
 
-#test for various keyboard inputs
-def checkKeys(myData):
 
-    (event, background, drawColor, lineWidth, keepGoing, screen, mat) = myData
+def check_keys(my_data):
+    # test for various keyboard inputs
+    (event, background, draw_color, line_width, keep_going, screen, mat) = my_data
 
     if event.key == pygame.K_q:
-        keepGoing = False
+        keep_going = False
 
     elif event.key == pygame.K_c:
         background.fill((255, 255, 255))
-        drawPixelated(np.zeros((30, 30)), screen)
+        draw_pixelated(np.zeros((30, 30)), screen)
 
     elif event.key == pygame.K_s:
         answer = int(ask(screen, ""))
-        learnPattern(mat, answer)
+        learn_pattern(mat, answer)
 
     elif event.key == pygame.K_t:
-        userTest(myData)
+        user_test(my_data)
 
     background.fill((255, 255, 255))
-    drawPixelated(np.zeros((30, 30)), screen)
+    draw_pixelated(np.zeros((30, 30)), screen)
 
-    myData = (event, background, drawColor, lineWidth, keepGoing)
-    return myData
+    my_data = (event, background, draw_color, line_width, keep_going)
+    return my_data
 
-def denseMatrix(matrix):
 
-    consecutiveNumber = 0
+def dense_matrix(matrix):
+    consecutive_number = 0
     i = 0
     arr = []
 
     for j in range(matrix.__len__()):
         for i in range(matrix.__len__() - 1):
             if matrix[i][j] == 1 and matrix[i+1][j] == 0:
-                consecutiveNumber = consecutiveNumber + 1
+                consecutive_number = consecutive_number + 1
         if matrix[i+1][j] == 1:
-            consecutiveNumber = consecutiveNumber + 1
-        arr.append(consecutiveNumber)
-        consecutiveNumber = 0
-
-    #print(arr)
+            consecutive_number = consecutive_number + 1
+        arr.append(consecutive_number)
+        consecutive_number = 0
     return arr
 
-def denseArr(arr):
-    pattern = []
 
+def dense_arr(arr):
+    pattern = []
     for i in range(arr.__len__() - 1):
         if arr[i] != arr[i+1]:
             pattern.append(arr[i])
 
     if pattern[pattern.__len__() - 1] != arr[i+1]:
         pattern.append(arr[i+1])
-
-    #print(str(pattern))
     return pattern
 
-def learnPattern(matrix, character):
-    arr = denseMatrix(matrix)
-    arr = denseArr(arr)
+
+def learn_pattern(matrix, character):
+    arr = dense_matrix(matrix)
+    arr = dense_arr(arr)
     x = ''.join(str(x) for x in arr)
     y = str(character)
 
@@ -228,7 +228,7 @@ def learnPattern(matrix, character):
         add_pattern = ("INSERT INTO patterns"
                        "(pattern, digit)"
                        "VALUES (%s, %s)")
-        data_pattern= (x, y)
+        data_pattern = (x, y)
 
         cursor.execute(add_pattern, data_pattern)
         cnx.commit()
@@ -246,16 +246,17 @@ def learnPattern(matrix, character):
     else:
         cnx.close()
 
-def getPattern(matrix):
-    arr = denseMatrix(matrix)
-    arr = denseArr(arr)
+
+def get_pattern(matrix):
+    arr = dense_matrix(matrix)
+    arr = dense_arr(arr)
     pattern = "{x}".format(x=''.join(str(x) for x in arr))
     return pattern
 
-def userTest(myData):
-    (event, background, drawColor, lineWidth, keepGoing, screen, mat) = myData
-    flag = False
-    pattern = getPattern(mat)
+
+def user_test(my_data):
+    (event, background, draw_color, line_width, keep_going, screen, mat) = my_data
+    pattern = get_pattern(mat)
 
     try:
         cnx = connector.connect(user='admin', password='123456', database='hand_write_recognition')
@@ -300,50 +301,51 @@ def main():
     background2.fill((255, 255, 255))
 
     clock = pygame.time.Clock()
-    keepGoing = True
-    lineStart = (0, 0)
-    drawColor = (0, 200, 0)
-    lineWidth = 10
+    keep_going = True
+    line_start = (0, 0)
+    draw_color = (0, 200, 0)
+    line_width = 10
 
-    inputTheta = sio.loadmat('scaledTheta.mat')
-    theta = inputTheta['t']
+    input_theta = sio.loadmat('scaledTheta.mat')
+    theta = input_theta['t']
     num_hidden = 25
     num_input = 900
-    num_lables = 10
+    num_labels = 10
 
-    Theta1 = np.reshape(theta[:num_hidden * (num_input + 1)], (num_hidden, -1))
-    Theta2 = np.reshape(theta[num_hidden * (num_input + 1):], (num_lables, -1))
+    theta1 = np.reshape(theta[:num_hidden * (num_input + 1)], (num_hidden, -1))
+    theta2 = np.reshape(theta[num_hidden * (num_input + 1):], (num_labels, -1))
 
     pygame.display.update()
     image = None
 
-    while keepGoing:
+    while keep_going:
 
         clock.tick(30)
 
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
-                keepGoing = False
+                keep_going = False
 
             elif event.type == pygame.MOUSEMOTION:
-                lineEnd = pygame.mouse.get_pos()
+                line_end = pygame.mouse.get_pos()
                 if pygame.mouse.get_pressed() == (1, 0, 0):
-                    pygame.draw.line(background, drawColor, lineStart, lineEnd, lineWidth)
-                lineStart = lineEnd
+                    pygame.draw.line(background, draw_color, line_start, line_end, line_width)
+                line_start = line_end
 
             elif event.type == pygame.MOUSEBUTTONUP:
                 screen.fill((0, 0, 0))
                 screen.blit(background2, (370, 0))
-                mat = calculateImage(background, screen, Theta1, Theta2, lineWidth)
+                mat = calculate_image(background, screen, theta1, theta2, line_width)
 
             elif event.type == pygame.KEYDOWN:
-                myData = (event, background, drawColor, lineWidth, keepGoing, screen, mat)
-                myData = checkKeys(myData)
-                (event, background, drawColor, lineWidth, keepGoing) = myData
+                my_data = (event, background, draw_color, line_width, keep_going, screen, mat)
+                my_data = check_keys(my_data)
+                (event, background, draw_color, line_width, keep_going) = my_data
 
         screen.blit(background, (0, 0))
         pygame.display.flip()
+
 
 if __name__ == "__main__":
     main()
