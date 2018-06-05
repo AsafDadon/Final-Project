@@ -28,7 +28,6 @@ def convert_image_to_matrix(image, screen):
                 mat[x][y] = 0
             else:
                 mat[x][y] = 1
-    #print(mat.transpose())
     return mat.transpose()
 
 
@@ -116,10 +115,8 @@ def get_key():
     # Get key event
     while 1:
         event = pygame.event.poll()
-
         if event.type == KEYDOWN:
             return event.key
-
         else:
             pass
 
@@ -144,19 +141,19 @@ def ask(screen, question):
     display_box(screen, question + " " + current_string + "")
 
     while 1:
-        inkey = get_key()
+        in_key = get_key()
 
-        if inkey == K_BACKSPACE:
+        if in_key == K_BACKSPACE:
             current_string = current_string[0:-1]
 
-        elif inkey == K_RETURN:
+        elif in_key == K_RETURN:
             break
 
-        elif inkey == K_MINUS:
+        elif in_key == K_MINUS:
             current_string.append("_")
 
-        elif inkey <= 127:
-            current_string += (chr(inkey))
+        elif in_key <= 127:
+            current_string += (chr(in_key))
 
         display_box(screen, question + " " + current_string + "")
 
@@ -269,11 +266,27 @@ def user_test(my_data):
         for digit in cursor:
             digits.append(digit)
 
-        print("=========================")
-        print("guess 1     |     guess 2")
-        print("=========================")
-        print(Counter(digits).most_common(2))
-        print("=========================")
+        guess1mount = guess2mount = 0
+        try:
+            guess1is = Counter(digits).most_common(2).pop(0)[0][0]
+            guess1mount = Counter(digits).most_common(2).pop(0)[1]
+            print('Guess 1 is :', guess1is)
+        except IndexError:
+            print('I could not guess a single number as a first guess.')
+
+        try:
+            guess2is = Counter(digits).most_common(2).pop(1)[0][0]
+            guess2mount = Counter(digits).most_common(2).pop(1)[1]
+            print('Guess 2 is :', guess2is)
+        except IndexError:
+            print('I could not guess a single number as a second guess.')
+
+        sum = guess1mount + guess2mount
+        try:
+            print('Accuracy of :', guess1is, ': ', (guess1mount / sum) * 100, '%')
+            print('Accuracy of :', guess2is, ': ', (guess2mount / sum) * 100, '%')
+        except UnboundLocalError:
+            print('I could not calculate the accuracy')
 
         cursor.close()
 
