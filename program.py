@@ -264,7 +264,7 @@ def user_test(my_data):
         cursor.execute(query)
         digits = []
         for digit in cursor:
-            digits.append(digit)
+                digits.append(digit)
 
         guess1mount = guess2mount = 0
         try:
@@ -308,9 +308,9 @@ def main():
     screen = pygame.display.set_mode((730, 450))
     pygame.display.set_caption("Handwriting recognition By Patterns")
 
-    background = pygame.Surface((360 ,360))
+    background = pygame.Surface((360, 360))
     background.fill((255, 255, 255))
-    background2 = pygame.Surface((360 ,360))
+    background2 = pygame.Surface((360, 360))
     background2.fill((255, 255, 255))
 
     clock = pygame.time.Clock()
