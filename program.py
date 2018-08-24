@@ -1,13 +1,13 @@
+import shrinking_model
+import model_tester
+import extended_model
+import multiplication_model
 import pygame
 from numpy import *
 import numpy as np
 import scipy.io as sio
 from pygame.locals import *
-from collections import Counter
-import mysql.connector as connector
-from mysql.connector import errorcode
 import pygame.font, pygame.event, pygame.draw
-
 changed = False
 screen = None
 
@@ -173,133 +173,20 @@ def check_keys(my_data):
 
     elif event.key == pygame.K_s:
         answer = int(ask(screen, ""))
-        learn_pattern(mat, answer)
+        shrinking_model.learn_pattern(mat, answer)
+        extended_model.learn_pattern(mat, answer)
+        multiplication_model.learn_pattern(mat, answer)
 
     elif event.key == pygame.K_t:
-        user_test(my_data)
+        model_tester.test_model(my_data, 'shrinking_model')
+        model_tester.test_model(my_data, 'extended_model')
+        model_tester.test_model(my_data, 'multiplication_model')
 
     background.fill((255, 255, 255))
     draw_pixelated(np.zeros((30, 30)), screen)
 
     my_data = (event, background, draw_color, line_width, keep_going)
     return my_data
-
-
-def dense_matrix(matrix):
-    consecutive_number = 0
-    i = 0
-    arr = []
-
-    for j in range(matrix.__len__()):
-        for i in range(matrix.__len__() - 1):
-            if matrix[i][j] == 1 and matrix[i+1][j] == 0:
-                consecutive_number = consecutive_number + 1
-        if matrix[i+1][j] == 1:
-            consecutive_number = consecutive_number + 1
-        arr.append(consecutive_number)
-        consecutive_number = 0
-    return arr
-
-
-def dense_arr(arr):
-    pattern = []
-    for i in range(arr.__len__() - 1):
-        if arr[i] != arr[i+1]:
-            pattern.append(arr[i])
-
-    if pattern[pattern.__len__() - 1] != arr[i+1]:
-        pattern.append(arr[i+1])
-    return pattern
-
-
-def learn_pattern(matrix, character):
-    arr = dense_matrix(matrix)
-    arr = dense_arr(arr)
-    x = ''.join(str(x) for x in arr)
-    y = str(character)
-
-    try:
-        cnx = connector.connect(user='admin', password='123456', database='hand_write_recognition')
-        cursor = cnx.cursor()
-
-        add_pattern = ("INSERT INTO patterns"
-                       "(pattern, digit)"
-                       "VALUES (%s, %s)")
-        data_pattern = (x, y)
-
-        cursor.execute(add_pattern, data_pattern)
-        cnx.commit()
-
-        cursor.close()
-
-    except connector.Error as err:
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with your user name or password")
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
-        else:
-            print(err)
-
-    else:
-        cnx.close()
-
-
-def get_pattern(matrix):
-    arr = dense_matrix(matrix)
-    arr = dense_arr(arr)
-    pattern = "{x}".format(x=''.join(str(x) for x in arr))
-    return pattern
-
-
-def user_test(my_data):
-    (event, background, draw_color, line_width, keep_going, screen, mat) = my_data
-    pattern = get_pattern(mat)
-
-    try:
-        cnx = connector.connect(user='admin', password='123456', database='hand_write_recognition')
-        cursor = cnx.cursor()
-
-        query = ("SELECT digit FROM patterns WHERE pattern = {}".format(pattern))
-
-        cursor.execute(query)
-        digits = []
-        for digit in cursor:
-                digits.append(digit)
-
-        guess1mount = guess2mount = 0
-        try:
-            guess1is = Counter(digits).most_common(2).pop(0)[0][0]
-            guess1mount = Counter(digits).most_common(2).pop(0)[1]
-            print('Guess 1 is :', guess1is)
-        except IndexError:
-            print('I could not guess a single number as a first guess.')
-
-        try:
-            guess2is = Counter(digits).most_common(2).pop(1)[0][0]
-            guess2mount = Counter(digits).most_common(2).pop(1)[1]
-            print('Guess 2 is :', guess2is)
-        except IndexError:
-            print('I could not guess a single number as a second guess.')
-
-        sum = guess1mount + guess2mount
-        try:
-            print('Accuracy of :', guess1is, ': ', (guess1mount / sum) * 100, '%')
-            print('Accuracy of :', guess2is, ': ', (guess2mount / sum) * 100, '%')
-        except UnboundLocalError:
-            print('I could not calculate the accuracy')
-
-        cursor.close()
-
-    except connector.Error as err:
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with your user name or password")
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
-        else:
-            print(err)
-
-    else:
-        cnx.close()
 
 
 def main():

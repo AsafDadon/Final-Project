@@ -1,6 +1,9 @@
+import shrinking_model
+import extended_model
+import multiplication_model
 import struct as st
 import numpy as np
-from program import learn_pattern
+
 
 def main():
     file_name = {'images': 'C:\\Users\\asafm\\PycharmProjects\\Final-Project\\samples\\train-images.idx3-ubyte',
@@ -57,7 +60,9 @@ def main():
                     mat[j][h] = 0
                 else:
                     mat[j][h] = 1
-        learn_pattern(mat, lable)
+        shrinking_model.learn_pattern(mat, lable)
+        extended_model.learn_pattern(mat, lable)
+        multiplication_model.learn_pattern(mat, lable)
 
     print('Finish to load MNIST dataset')
 
