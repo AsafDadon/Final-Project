@@ -4,6 +4,7 @@ from mysql.connector import errorcode
 
 def learn_pattern(matrix, character):
     x = get_pattern(matrix)
+    print(x)
     y = str(character)
 
     try:
@@ -66,9 +67,7 @@ def dense_arr(arr):
 
 def get_pattern(matrix):
     arr = sum_matrix(matrix)
-    print(arr)
     arr = dense_arr(arr)
-    print(arr)
     pattern = "{x}".format(x=''.join(str(x) for x in arr))
     return pattern
 

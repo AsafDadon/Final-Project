@@ -14,15 +14,15 @@ screen = None
 
 
 def convert_image_to_matrix(image, screen):
-    # Draw 30x30 image of input
+    # Draw 28x28 image of input
     a = image.ravel()
     a = (255 - a * 255).transpose()
-    size = 30
-    mat = range(900)
-    mat = np.reshape(mat, (30, 30))
+    size = 28
+    mat = range(784)
+    mat = np.reshape(mat, (28, 28))
     for x in range(size):
         for y in range(size):
-            z = x * 30 + y
+            z = x * 28 + y
             c = int(a[z])
             pygame.draw.rect(screen, (c, c, c), (x * 11 + 385, 15 + y * 11, 11, 11))
             if c == 255:
@@ -33,13 +33,13 @@ def convert_image_to_matrix(image, screen):
 
 
 def draw_pixelated(image, screen):
-    # Draw 30x30 image of input
+    # Draw 28x28 image of input
     a = image.ravel()
     a = (255 - a * 255).transpose()
-    size = 30
+    size = 28
     for x in range(size):
         for y in range(size):
-            z = x * 30 + y
+            z = x * 28 + y
             c = int(a[z])
             pygame.draw.rect(screen, (c, c, c), (x * 11 + 385, 15 + y * 11, 11, 11))
 
@@ -95,7 +95,7 @@ def calculate_image(background, screen, theta1, theta2, line_width):
         changed = True
         crop_surf = pygame.Surface((dx, dy))
         crop_surf.blit(background, (0, 0), (x[0], y[0], x[1], y[1]), special_flags=BLEND_RGBA_MAX)
-        scaled_background = pygame.transform.smoothscale(crop_surf, (30, 30))
+        scaled_background = pygame.transform.smoothscale(crop_surf, (28, 28))
 
         image = pygame.surfarray.array3d(scaled_background)
         image = abs(1 - image / 253)
@@ -107,7 +107,7 @@ def calculate_image(background, screen, theta1, theta2, line_width):
         (x, y) = screen.get_size()
 
     except:
-        image = np.zeros((30, 30))
+        image = np.zeros((28, 28))
 
     return mat
 
@@ -170,14 +170,15 @@ def check_keys(my_data):
 
     elif event.key == pygame.K_c:
         background.fill((255, 255, 255))
-        draw_pixelated(np.zeros((30, 30)), screen)
+        draw_pixelated(np.zeros((28, 28)), screen)
 
     elif event.key == pygame.K_s:
         answer = int(ask(screen, ""))
+        print(mat)
         sum_model.learn_pattern(mat, answer)
-        #shrinking_model.learn_pattern(mat, answer)
-        #extended_model.learn_pattern(mat, answer)
-        #multiplication_model.learn_pattern(mat, answer)
+        shrinking_model.learn_pattern(mat, answer)
+        extended_model.learn_pattern(mat, answer)
+        multiplication_model.learn_pattern(mat, answer)
 
     elif event.key == pygame.K_t:
         model_tester.test_model(my_data, 'sum_model')
@@ -186,7 +187,7 @@ def check_keys(my_data):
         model_tester.test_model(my_data, 'multiplication_model')
 
     background.fill((255, 255, 255))
-    draw_pixelated(np.zeros((30, 30)), screen)
+    draw_pixelated(np.zeros((28, 28)), screen)
 
     my_data = (event, background, draw_color, line_width, keep_going)
     return my_data
@@ -212,7 +213,7 @@ def main():
     input_theta = sio.loadmat('scaledTheta.mat')
     theta = input_theta['t']
     num_hidden = 25
-    num_input = 900
+    num_input = 784
     num_labels = 10
 
     theta1 = np.reshape(theta[:num_hidden * (num_input + 1)], (num_hidden, -1))

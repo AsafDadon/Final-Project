@@ -16,6 +16,8 @@ def test_machine(mat, model_name):
         pattern = extended_model.get_pattern(mat)
     elif 'multiplication' in model_name:
         pattern = multiplication_model.get_pattern(mat)
+    elif 'sum_model' in model_name:
+        pattern = multiplication_model.get_pattern(mat)
 
     try:
         cnx = connector.connect(user='admin', password='123456', database='hand_write_recognition')
