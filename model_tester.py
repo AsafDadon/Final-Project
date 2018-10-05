@@ -1,6 +1,7 @@
 import shrinking_model
 import extended_model
 import multiplication_model
+import sum_model
 import mysql.connector as connector
 from mysql.connector import errorcode
 from collections import Counter
@@ -14,6 +15,8 @@ def test_model(my_data, model_name):
         pattern = extended_model.get_pattern(mat)
     elif 'multiplication' in model_name:
         pattern = multiplication_model.get_pattern(mat)
+    elif 'sum' in model_name:
+        pattern = sum_model.get_pattern(mat)
 
     try:
         cnx = connector.connect(user='admin', password='123456', database='hand_write_recognition')

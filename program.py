@@ -2,6 +2,7 @@ import shrinking_model
 import model_tester
 import extended_model
 import multiplication_model
+import sum_model
 import pygame
 from numpy import *
 import numpy as np
@@ -173,11 +174,13 @@ def check_keys(my_data):
 
     elif event.key == pygame.K_s:
         answer = int(ask(screen, ""))
-        shrinking_model.learn_pattern(mat, answer)
-        extended_model.learn_pattern(mat, answer)
-        multiplication_model.learn_pattern(mat, answer)
+        sum_model.learn_pattern(mat, answer)
+        #shrinking_model.learn_pattern(mat, answer)
+        #extended_model.learn_pattern(mat, answer)
+        #multiplication_model.learn_pattern(mat, answer)
 
     elif event.key == pygame.K_t:
+        model_tester.test_model(my_data, 'sum_model')
         model_tester.test_model(my_data, 'shrinking_model')
         model_tester.test_model(my_data, 'extended_model')
         model_tester.test_model(my_data, 'multiplication_model')

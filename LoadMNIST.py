@@ -1,6 +1,7 @@
 import shrinking_model
 import extended_model
 import multiplication_model
+import sum_model
 import struct as st
 import numpy as np
 
@@ -50,7 +51,7 @@ def main():
     images_array = 255 - np.asarray(st.unpack('>' + 'B' * nBytes, images_file.read(nBytes))).reshape((nImg, nR, nC))
     labels_array = np.asarray(st.unpack('>' + 'B' * nImg, labels_file.read(nImg))).reshape((nImg, 1))
 
-    for i in range(60000):
+    for i in range(5000):
         lable = labels_array[i][0]
         mat = range(784)
         mat = np.reshape(mat, (28, 28))
@@ -60,10 +61,11 @@ def main():
                     mat[j][h] = 0
                 else:
                     mat[j][h] = 1
-        shrinking_model.learn_pattern(mat, lable)
-        extended_model.learn_pattern(mat, lable)
-        multiplication_model.learn_pattern(mat, lable)
-
+        print(mat)
+        sum_model.learn_pattern(mat, lable)
+        #shrinking_model.learn_pattern(mat, lable)
+        #extended_model.learn_pattern(mat, lable)
+        #multiplication_model.learn_pattern(mat, lable)
     print('Finish to load MNIST dataset')
 
 
