@@ -6,7 +6,6 @@ import struct as st
 import numpy as np
 import matrix_manipulate
 from tqdm import tqdm
-from multiprocessing import Process
 
 
 def main():
@@ -54,7 +53,7 @@ def main():
     images_array = 255 - np.asarray(st.unpack('>' + 'B' * nBytes, images_file.read(nBytes))).reshape((nImg, nR, nC))
     labels_array = np.asarray(st.unpack('>' + 'B' * nImg, labels_file.read(nImg))).reshape((nImg, 1))
 
-    for i in tqdm(range(60000)):
+    for i in tqdm(range(14585, 60000)):
         lable = labels_array[i][0]
         mat = range(784)
         mat = np.reshape(mat, (28, 28))
@@ -71,22 +70,7 @@ def main():
         multiplication_model.learn_pattern(m, lable, "multiplication_model")
 
     print('Finish to load MNIST dataset')
-"""
-        p1 = Process(target=sum_model.learn_pattern(m, lable))
-        p2 = Process(target=shrinking_model.learn_pattern(m, lable))
-        p3 = Process(target=extended_model.learn_pattern(m, lable))
-        p4 = Process(target=multiplication_model.learn_pattern(m, lable))
 
-        p1.start()
-        p2.start()
-        p3.start()
-        p4.start()
-
-        p1.join()
-        p2.join()
-        p3.join()
-        p4.join()
-"""
 
 if __name__ == "__main__":
     main()

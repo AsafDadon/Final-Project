@@ -62,15 +62,19 @@ def calculate_image(background, screen, theta1, theta2, line_width):
             d = dx - dy
             y0t = y[0] - d // 2
             y1t = y[1] + d // 2 + d % 2
-            if y0t < 0: y0t = y[0]; y1t = y[1] + d
-            if y1t > bound: y0t = y[0] - d; y1t = y[1]
+            if y0t < 0:
+                y0t = y[0]; y1t = y[1] + d
+            if y1t > bound:
+                y0t = y[0] - d; y1t = y[1]
             y[0], y[1] = y0t, y1t
         else:
             d = dy - dx
             x0t = x[0] - d // 2
             x1t = x[1] + d // 2 + d % 2
-            if x0t < 0: x0t = x[0]; x1t = x[1] + d
-            if x1t > bound: x0t = x[0] - d; x1t = x[1]
+            if x0t < 0:
+                x0t = x[0]; x1t = x[1] + d
+            if x1t > bound:
+                x0t = x[0] - d; x1t = x[1]
             x[0], x[1] = x0t, x1t
         dx = x[1] - x[0]
         dy = y[1] - y[0]
@@ -118,7 +122,7 @@ def display_box(screen, message):
 
 
 def ask(screen, question):
-    # create input box for entering correct value of y
+    # create input box for entering the correct digit
     pygame.font.init()
     current_string = str()
     display_box(screen, question + " " + current_string + "")
@@ -154,21 +158,23 @@ def check_keys(my_data):
         background.fill((255, 255, 255))
         draw_pixelated(np.zeros((28, 28)), screen)
 
+    # s - for saving a digit and pattern
     elif event.key == pygame.K_s:
         answer = int(ask(screen, ""))
 
         f_m = matrix_manipulate.focus_mat(mat)
 
-        sum_model.learn_pattern(f_m, answer, "sum_model")
-        shrinking_model.learn_pattern(f_m, answer, "shrinking_model")
-        extended_model.learn_pattern(f_m, answer, "extended_model")
-        multiplication_model.learn_pattern(f_m, answer, "multiplication_model")
+        sum_model.learn_pattern(f_m, answer, "one_zero_sum")
+        shrinking_model.learn_pattern(f_m, answer, "one_zero_shrinking")
+        extended_model.learn_pattern(f_m, answer, "one_zero_extended")
+        multiplication_model.learn_pattern(f_m, answer, "one_zero_multiplication")
 
+    # t - for testing some real time hand write digit
     elif event.key == pygame.K_t:
-        model_tester.test_model(my_data, 'sum_model')
-        model_tester.test_model(my_data, 'shrinking_model')
-        model_tester.test_model(my_data, 'extended_model')
-        model_tester.test_model(my_data, 'multiplication_model')
+        model_tester.test_model(my_data, 'one_zero_sum')
+        model_tester.test_model(my_data, 'one_zero_shrinking')
+        model_tester.test_model(my_data, 'one_zero_extended')
+        model_tester.test_model(my_data, 'one_zero_multiplication')
 
     background.fill((255, 255, 255))
     draw_pixelated(np.zeros((28, 28)), screen)

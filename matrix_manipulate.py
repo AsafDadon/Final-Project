@@ -63,5 +63,4 @@ def focus_mat(matrix):
         for j in range(left_col, right_col + 1):
             mat[i - up_row][j - left_col] = matrix[i][j]
 
-    #print(mat)
     return mat

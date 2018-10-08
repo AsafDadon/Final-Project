@@ -113,8 +113,6 @@ def main():
                 result = test_machine(m, arg)
                 if result == lable:
                     sum += 1
-                    #print('sum = ', sum)
-                    #print('photos = ', i)
 
         print('===============================================================')
         print('Finish to Test the machine with MNIST dataset on {}'.format(arg))
