@@ -5,18 +5,20 @@ import sum_model
 import mysql.connector as connector
 from mysql.connector import errorcode
 from collections import Counter
+from matrix_manipulate import focus_mat
 
 
 def test_model(my_data, model_name):
     (event, background, draw_color, line_width, keep_going, screen, mat) = my_data
+    f_m = focus_mat(mat)
     if 'shrinking' in model_name:
-        pattern = shrinking_model.get_pattern(mat)
+        pattern = shrinking_model.get_pattern(f_m)
     elif 'extended' in model_name:
-        pattern = extended_model.get_pattern(mat)
+        pattern = extended_model.get_pattern(f_m)
     elif 'multiplication' in model_name:
-        pattern = multiplication_model.get_pattern(mat)
+        pattern = multiplication_model.get_pattern(f_m)
     elif 'sum' in model_name:
-        pattern = sum_model.get_pattern(mat)
+        pattern = sum_model.get_pattern(f_m)
 
     try:
         cnx = connector.connect(user='admin', password='123456', database='hand_write_recognition')

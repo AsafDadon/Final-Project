@@ -11,9 +11,13 @@ def learn_pattern(matrix, character):
         cnx = connector.connect(user='admin', password='123456', database='hand_write_recognition')
         cursor = cnx.cursor()
 
-        add_pattern = ("INSERT INTO extended_model"
+        add_pattern = ("INSERT INTO one_zero_extended"
                        "(pattern, digit)"
                        "VALUES (%s, %s)")
+
+        """add_pattern = ("INSERT INTO extended_model"
+                       "(pattern, digit)"
+                       "VALUES (%s, %s)")"""
         data_pattern = (x, y)
 
         cursor.execute(add_pattern, data_pattern)

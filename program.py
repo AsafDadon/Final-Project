@@ -9,27 +9,9 @@ import numpy as np
 import scipy.io as sio
 from pygame.locals import *
 import pygame.font, pygame.event, pygame.draw
+import matrix_manipulate
 changed = False
 screen = None
-
-
-def convert_image_to_matrix(image, screen):
-    # Draw 28x28 image of input
-    a = image.ravel()
-    a = (255 - a * 255).transpose()
-    size = 28
-    mat = range(784)
-    mat = np.reshape(mat, (28, 28))
-    for x in range(size):
-        for y in range(size):
-            z = x * 28 + y
-            c = int(a[z])
-            pygame.draw.rect(screen, (c, c, c), (x * 11 + 385, 15 + y * 11, 11, 11))
-            if c == 255:
-                mat[x][y] = 0
-            else:
-                mat[x][y] = 1
-    return mat.transpose()
 
 
 def draw_pixelated(image, screen):
@@ -102,7 +84,7 @@ def calculate_image(background, screen, theta1, theta2, line_width):
         image = np.mean(image, 2)
         image = np.matrix(image.ravel())
 
-        mat = convert_image_to_matrix(image, screen)
+        mat = matrix_manipulate.convert_image_to_matrix(image, screen)
 
         (x, y) = screen.get_size()
 
@@ -174,11 +156,13 @@ def check_keys(my_data):
 
     elif event.key == pygame.K_s:
         answer = int(ask(screen, ""))
-        print(mat)
-        sum_model.learn_pattern(mat, answer)
-        shrinking_model.learn_pattern(mat, answer)
-        extended_model.learn_pattern(mat, answer)
-        multiplication_model.learn_pattern(mat, answer)
+        #print(mat)
+        f_m = matrix_manipulate.focus_mat(mat)
+        #print(f_m)
+        sum_model.learn_pattern(f_m, answer)
+        shrinking_model.learn_pattern(f_m, answer)
+        extended_model.learn_pattern(f_m, answer)
+        multiplication_model.learn_pattern(f_m, answer)
 
     elif event.key == pygame.K_t:
         model_tester.test_model(my_data, 'sum_model')

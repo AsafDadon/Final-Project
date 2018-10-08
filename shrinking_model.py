@@ -10,9 +10,13 @@ def learn_pattern(matrix, character):
         cnx = connector.connect(user='admin', password='123456', database='hand_write_recognition')
         cursor = cnx.cursor()
 
-        add_pattern = ("INSERT INTO shrinking_model"
+        add_pattern = ("INSERT INTO one_zero_shrinking"
                        "(pattern, digit)"
                        "VALUES (%s, %s)")
+
+        """add_pattern = ("INSERT INTO shrinking_model"
+                       "(pattern, digit)"
+                       "VALUES (%s, %s)")"""
         data_pattern = (x, y)
 
         cursor.execute(add_pattern, data_pattern)
@@ -34,11 +38,10 @@ def learn_pattern(matrix, character):
 
 def dense_matrix(matrix):
     consecutive_number = 0
-    i = 0
     arr = []
 
-    for j in range(matrix.__len__()):
-        for i in range(matrix.__len__() - 1):
+    for j in range(len(matrix[0])):
+        for i in range(len(matrix) - 1):
             if matrix[i][j] == 1 and matrix[i+1][j] == 0:
                 consecutive_number = consecutive_number + 1
         if matrix[i+1][j] == 1:
@@ -53,6 +56,10 @@ def dense_arr(arr):
     for i in range(arr.__len__() - 1):
         if arr[i] != arr[i+1]:
             pattern.append(arr[i])
+
+    if pattern.__len__() == 0:
+        pattern.append(arr[0])
+        return pattern
 
     if pattern[pattern.__len__() - 1] != arr[i+1]:
         pattern.append(arr[i+1])

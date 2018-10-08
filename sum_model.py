@@ -11,9 +11,13 @@ def learn_pattern(matrix, character):
         cnx = connector.connect(user='admin', password='123456', database='hand_write_recognition')
         cursor = cnx.cursor()
 
-        add_pattern = ("INSERT INTO sum_model"
+        add_pattern = ("INSERT INTO one_zero_sum"
                        "(pattern, digit)"
                        "VALUES (%s, %s)")
+
+        """add_pattern = ("INSERT INTO sum_model"
+                       "(pattern, digit)"
+                       "VALUES (%s, %s)")"""
         data_pattern = (x, y)
 
         cursor.execute(add_pattern, data_pattern)
@@ -36,20 +40,23 @@ def learn_pattern(matrix, character):
 def sum_matrix(matrix):
     row_counter = 0
     col_counter = 0
-    i = 0
     row = []
     col = []
 
-    for i in range(matrix.__len__()):
-        for j in range(matrix.__len__()):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
             if matrix[i][j] == 1:
                 row_counter = row_counter + 1
-            if matrix[j][i] == 1:
-                col_counter = col_counter + 1
         row.append(row_counter)
-        col.append(col_counter)
         row_counter = 0
+
+    for j in range(len(matrix[0])):
+        for i in range(len(matrix)):
+            if matrix[i][j] == 1:
+                col_counter = col_counter + 1
+        col.append(col_counter)
         col_counter = 0
+
     row.extend(col)
     return row
 
