@@ -1,45 +1,15 @@
-import mysql.connector as connector
-from mysql.connector import errorcode
+import dal
 
 
-def learn_pattern(matrix, character):
-    x = get_pattern(matrix)
-    y = str(character)
-
-    try:
-        cnx = connector.connect(user='admin', password='123456', database='hand_write_recognition')
-        cursor = cnx.cursor()
-
-        add_pattern = ("INSERT INTO one_zero_shrinking"
-                       "(pattern, digit)"
-                       "VALUES (%s, %s)")
-
-        """add_pattern = ("INSERT INTO shrinking_model"
-                       "(pattern, digit)"
-                       "VALUES (%s, %s)")"""
-        data_pattern = (x, y)
-
-        cursor.execute(add_pattern, data_pattern)
-        cnx.commit()
-
-        cursor.close()
-
-    except connector.Error as err:
-        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print("Something is wrong with your user name or password")
-        elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("Database does not exist")
-        else:
-            print(err)
-
-    else:
-        cnx.close()
+def learn_pattern(matrix, character, model_name):
+    pattern = get_pattern(matrix)
+    lable = str(character)
+    dal.add_to_db(pattern, lable, model_name, False)
 
 
 def dense_matrix(matrix):
     consecutive_number = 0
     arr = []
-
     for j in range(len(matrix[0])):
         for i in range(len(matrix) - 1):
             if matrix[i][j] == 1 and matrix[i+1][j] == 0:

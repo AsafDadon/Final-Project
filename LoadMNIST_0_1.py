@@ -6,7 +6,6 @@ import struct as st
 import numpy as np
 import matrix_manipulate
 from tqdm import tqdm
-from multiprocessing import Process
 
 
 def main():
@@ -56,37 +55,24 @@ def main():
 
     for i in tqdm(range(60000)):
         lable = labels_array[i][0]
-        mat = range(784)
-        mat = np.reshape(mat, (28, 28))
-        for j in range(28):
-            for h in range(28):
-                if images_array[i][j][h] == 255:
-                    mat[j][h] = 0
-                else:
-                    mat[j][h] = 1
-        m = matrix_manipulate.focus_mat(mat)
-        #sum_model.learn_pattern(m, lable, "sum_model")
-        #shrinking_model.learn_pattern(m, lable, "shrinking_model")
-        #extended_model.learn_pattern(m, lable, "extended_model")
-        multiplication_model.learn_pattern(m, lable, "multiplication_model")
+        if lable == 1 or lable == 0:
+            mat = range(784)
+            mat = np.reshape(mat, (28, 28))
+            for j in range(28):
+                for h in range(28):
+                    if images_array[i][j][h] == 255:
+                        mat[j][h] = 0
+                    else:
+                        mat[j][h] = 1
+            m = matrix_manipulate.focus_mat(mat)
+
+            sum_model.learn_pattern(m, lable, "one_zero_sum")
+            shrinking_model.learn_pattern(m, lable, "one_zero_shrinking")
+            extended_model.learn_pattern(m, lable, "one_zero_extended")
+            multiplication_model.learn_pattern(m, lable, "one_zero_multiplication")
 
     print('Finish to load MNIST dataset')
-"""
-        p1 = Process(target=sum_model.learn_pattern(m, lable))
-        p2 = Process(target=shrinking_model.learn_pattern(m, lable))
-        p3 = Process(target=extended_model.learn_pattern(m, lable))
-        p4 = Process(target=multiplication_model.learn_pattern(m, lable))
 
-        p1.start()
-        p2.start()
-        p3.start()
-        p4.start()
-
-        p1.join()
-        p2.join()
-        p3.join()
-        p4.join()
-"""
 
 if __name__ == "__main__":
     main()

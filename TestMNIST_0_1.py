@@ -18,7 +18,7 @@ def test_machine(mat, model_name):
         pattern = extended_model.get_pattern(mat)
     elif 'multiplication' in model_name:
         pattern = multiplication_model.get_pattern(mat)
-    elif 'sum_model' in model_name:
+    elif 'sum' in model_name:
         pattern = multiplication_model.get_pattern(mat)
 
     try:
@@ -35,7 +35,6 @@ def test_machine(mat, model_name):
         try:
             return int(Counter(digits).most_common(1).pop(0)[0][0])
         except IndexError:
-            print('I could not guess a single number as a first guess.')
             return -1
         cursor.close()
 
@@ -97,26 +96,31 @@ def main():
         labels_array = np.asarray(st.unpack('>' + 'B' * nImg, labels_file.read(nImg))).reshape((nImg, 1))
 
         sum = 0
+        num_of_samples = 0
         for i in tqdm(range(10000)):
             lable = labels_array[i][0]
-            mat = range(784)
-            mat = np.reshape(mat, (28, 28))
-            for j in range(28):
-                for h in range(28):
-                    if images_array[i][j][h] == 255:
-                        mat[j][h] = 0
-                    else:
-                        mat[j][h] = 1
-            m = matrix_manipulate.focus_mat(mat)
-            result = test_machine(m, arg)
-            if result == lable:
-                sum += 1
-                print('sum = ', sum)
-                print('photos = ', i)
+            if lable == 1 or lable == 0:
+                num_of_samples = num_of_samples + 1
+                mat = range(784)
+                mat = np.reshape(mat, (28, 28))
+                for j in range(28):
+                    for h in range(28):
+                        if images_array[i][j][h] == 255:
+                            mat[j][h] = 0
+                        else:
+                            mat[j][h] = 1
+                m = matrix_manipulate.focus_mat(mat)
+                result = test_machine(m, arg)
+                if result == lable:
+                    sum += 1
+                    #print('sum = ', sum)
+                    #print('photos = ', i)
 
         print('===============================================================')
         print('Finish to Test the machine with MNIST dataset on {}'.format(arg))
-        print('Accuracy of the machine is: ', (sum / 10000) * 100, '%')
+        print('Num of samples = ', num_of_samples)
+        print('num of correct answers = ', sum)
+        print('Accuracy of the machine is: ', (sum / num_of_samples) * 100, '%')
         print('===============================================================')
 
 

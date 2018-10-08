@@ -156,13 +156,13 @@ def check_keys(my_data):
 
     elif event.key == pygame.K_s:
         answer = int(ask(screen, ""))
-        #print(mat)
+
         f_m = matrix_manipulate.focus_mat(mat)
-        #print(f_m)
-        sum_model.learn_pattern(f_m, answer)
-        shrinking_model.learn_pattern(f_m, answer)
-        extended_model.learn_pattern(f_m, answer)
-        multiplication_model.learn_pattern(f_m, answer)
+
+        sum_model.learn_pattern(f_m, answer, "sum_model")
+        shrinking_model.learn_pattern(f_m, answer, "shrinking_model")
+        extended_model.learn_pattern(f_m, answer, "extended_model")
+        multiplication_model.learn_pattern(f_m, answer, "multiplication_model")
 
     elif event.key == pygame.K_t:
         model_tester.test_model(my_data, 'sum_model')
