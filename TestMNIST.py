@@ -35,7 +35,6 @@ def test_machine(mat, model_name):
         try:
             return int(Counter(digits).most_common(1).pop(0)[0][0])
         except IndexError:
-            print('I could not guess a single number as a first guess.')
             return -1
         cursor.close()
 

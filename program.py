@@ -164,17 +164,23 @@ def check_keys(my_data):
 
         f_m = matrix_manipulate.focus_mat(mat)
 
-        sum_model.learn_pattern(f_m, answer, "one_zero_sum")
         shrinking_model.learn_pattern(f_m, answer, "one_zero_shrinking")
         extended_model.learn_pattern(f_m, answer, "one_zero_extended")
         multiplication_model.learn_pattern(f_m, answer, "one_zero_multiplication")
 
+        """shrinking_model.learn_pattern(f_m, answer, "shrinking_model")
+        extended_model.learn_pattern(f_m, answer, "extended_model")
+        multiplication_model.learn_pattern(f_m, answer, "multiplication_model")"""
+
     # t - for testing some real time hand write digit
     elif event.key == pygame.K_t:
-        model_tester.test_model(my_data, 'one_zero_sum')
         model_tester.test_model(my_data, 'one_zero_shrinking')
         model_tester.test_model(my_data, 'one_zero_extended')
         model_tester.test_model(my_data, 'one_zero_multiplication')
+
+        """model_tester.test_model(my_data, 'multiplication_model')
+        model_tester.test_model(my_data, "shrinking_model")
+        model_tester.test_model(my_data, "extended_model")"""
 
     background.fill((255, 255, 255))
     draw_pixelated(np.zeros((28, 28)), screen)

@@ -53,7 +53,7 @@ def main():
     images_array = 255 - np.asarray(st.unpack('>' + 'B' * nBytes, images_file.read(nBytes))).reshape((nImg, nR, nC))
     labels_array = np.asarray(st.unpack('>' + 'B' * nImg, labels_file.read(nImg))).reshape((nImg, 1))
 
-    for i in tqdm(range(14585, 60000)):
+    for i in tqdm(range(60000)):
         lable = labels_array[i][0]
         mat = range(784)
         mat = np.reshape(mat, (28, 28))
@@ -65,9 +65,9 @@ def main():
                     mat[j][h] = 1
         m = matrix_manipulate.focus_mat(mat)
         #sum_model.learn_pattern(m, lable, "sum_model")
-        #shrinking_model.learn_pattern(m, lable, "shrinking_model")
+        shrinking_model.learn_pattern(m, lable, "shrinking_model")
         #extended_model.learn_pattern(m, lable, "extended_model")
-        multiplication_model.learn_pattern(m, lable, "multiplication_model")
+        #multiplication_model.learn_pattern(m, lable, "multiplication_model")
 
     print('Finish to load MNIST dataset')
 

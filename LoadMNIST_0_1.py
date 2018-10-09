@@ -66,9 +66,9 @@ def main():
                         mat[j][h] = 1
             m = matrix_manipulate.focus_mat(mat)
 
-            sum_model.learn_pattern(m, lable, "one_zero_sum")
-            shrinking_model.learn_pattern(m, lable, "one_zero_shrinking")
-            extended_model.learn_pattern(m, lable, "one_zero_extended")
+            #sum_model.learn_pattern(m, lable, "one_zero_sum")
+            #shrinking_model.learn_pattern(m, lable, "one_zero_shrinking")
+            #extended_model.learn_pattern(m, lable, "one_zero_extended")
             multiplication_model.learn_pattern(m, lable, "one_zero_multiplication")
 
     print('Finish to load MNIST dataset')
