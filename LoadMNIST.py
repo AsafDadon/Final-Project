@@ -1,7 +1,6 @@
 import shrinking_model
 import extended_model
 import multiplication_model
-import sum_model
 import struct as st
 import numpy as np
 import matrix_manipulate

@@ -1,7 +1,6 @@
 import shrinking_model
 import extended_model
 import multiplication_model
-import sum_model
 import mysql.connector as connector
 from mysql.connector import errorcode
 from collections import Counter

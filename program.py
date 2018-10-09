@@ -2,7 +2,6 @@ import shrinking_model
 import model_tester
 import extended_model
 import multiplication_model
-import sum_model
 import pygame
 from numpy import *
 import numpy as np
